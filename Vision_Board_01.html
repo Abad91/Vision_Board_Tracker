@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Board & Activity Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .vision-board {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .vision-item {
+            width: 200px;
+            height: 200px;
+            background-color: #e0f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .vision-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .vision-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        .tracker {
+            margin-top: 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            color: white;
+        }
+        .add-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .add-item input, .add-item button {
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .add-item input {
+            flex: 1;
+            margin-right: 1rem;
+        }
+        .add-item button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .add-item button:hover {
+            background: #388E3C;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+        }
+        .status span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 0.5rem;
+            border-radius: 50%;
+        }
+        .status.in-progress span {
+            background-color: #FFC107;
+        }
+        .status.completed span {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vision Board & Activity Tracker</h1>
+    </header>
+    <div class="container">
+        <!-- Vision Board Section -->
+        <section class="vision-board-section">
+            <h2>Vision Board</h2>
+            <div class="vision-board" id="visionBoard">
+                <!-- Dynamic vision items will be added here -->
+            </div>
+            <div class="add-item">
+                <input type="text" id="visionInput" placeholder="Enter a goal or upload image URL...">
+                <button onclick="addVisionItem()">Add to Vision Board</button>
+            </div>
+        </section>
+
+        <!-- Activity Tracker Section -->
+        <section class="tracker">
+            <h2>Activity Tracker</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Goal</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="trackerBody">
+                    <!-- Dynamic tracker rows will be added here -->
+                </tbody>
+            </table>
+            <div class="add-item">
+                <input type="text" id="goalInput" placeholder="Enter goal...">
+                <input type="text" id="actionInput" placeholder="Enter action...">
+                <button onclick="addTrackerRow()">Add to Tracker</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function addVisionItem() {
+            const visionInput = document.getElementById('visionInput');
+            const visionBoard = document.getElementById('visionBoard');
+            const value = visionInput.value;
+
+            if (value.trim() === '') return;
+
+            const item = document.createElement('div');
+            item.className = 'vision-item';
+
+            if (value.startsWith('http')) {
+                const img = document.createElement('img');
+                img.src = value;
+                item.appendChild(img);
+            } else {
+                item.textContent = value;
+            }
+
+            visionBoard.appendChild(item);
+            visionInput.value = '';
+        }
+
+        function addTrackerRow() {
+            const goalInput = document.getElementById('goalInput');
+            const actionInput = document.getElementById('actionInput');
+            const trackerBody = document.getElementById('trackerBody');
+
+            const goal = goalInput.value.trim();
+            const action = actionInput.value.trim();
+
+            if (!goal || !action) return;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${goal}</td>
+                <td>${action}</td>
+                <td class="status in-progress"><span></span>In Progress</td>
+            `;
+
+            trackerBody.appendChild(row);
+            goalInput.value = '';
+            actionInput.value = '';
+        }
+    </script>
+</body>
+</html>
